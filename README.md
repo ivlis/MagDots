@@ -57,7 +57,7 @@ we kindly ask you cite it as:
 
 ### Copyright
 
-The program in written by Ivan Lisenkov. The analytical theory is developed by Ivan Lisenkov, Vasyl
+The program is written by Ivan Lisenkov. The analytical theory is developed by Ivan Lisenkov, Vasyl
 Tyberkevych and Andrei Slavin at The Department of Physics, Oakland University, Rochester, Michigan, USA.
 
 (C) 2015 Ivan Lisenkov
