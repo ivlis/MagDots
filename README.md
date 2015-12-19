@@ -1,5 +1,7 @@
 # MagDots: Magnetization dynamics of nanoelement arrays
 
+[![DOI](https://zenodo.org/badge/19702/ivlis/MagDots.svg)](https://zenodo.org/badge/latestdoi/19702/ivlis/MagDots)
+
 ## Purpose
 
 The program is capable to calculate a spin-wave spectrum and a distribution of an internal magnetic
