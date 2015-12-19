@@ -1,0 +1,7 @@
+.*.sw?
+*.pyc
+build/
+util*.so
+util*.pyd
+util.c
+
