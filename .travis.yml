@@ -19,8 +19,10 @@ install:
   # - conda install --yes -c https://conda.anaconda.org/asmeurer gsl
   - gcc --version
   - python --version
-  - pip install nose2
+  - pip install nose2 nose-cov
   - make
   # - conda install --yes -c dan_blanchard python-coveralls nose-cov
 script:
-    - nose2
+    - coverage run --source=lib -m nose2.__main__ -v
+after_success:
+  - coveralls
