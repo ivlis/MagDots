@@ -3,11 +3,11 @@ python:
     # - "3.3"
     # - "3.4"
     - "3.5"
-# addons:
-#   apt:
-#     packages:
-#     # - python3-numpy
-#     # - python3-scipy
+addons:
+  apt:
+    packages:
+    - libgsl0-dev
+    - gsl-bin
 before_install:
   - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
   - chmod +x miniconda.sh
@@ -16,7 +16,7 @@ before_install:
   - conda update --yes conda
 install:
   - conda install --yes python=$TRAVIS_PYTHON_VERSION gcc atlas numpy scipy cython
-  - conda install --yes -c https://conda.anaconda.org/asmeurer gsl
+  # - conda install --yes -c https://conda.anaconda.org/asmeurer gsl
   - gcc --version
   - python --version
   - pip install nose2
