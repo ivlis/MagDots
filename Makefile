@@ -1,4 +1,4 @@
-PYTHON=/usr/bin/python3
+PYTHON=python3
 RM=/usr/bin/rm
 
 
@@ -10,4 +10,3 @@ clean:
 	$(RM) -r build
 	$(RM) util_pyx/util.c
 	$(RM) util_pyx/util*.so
-
