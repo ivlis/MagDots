@@ -20,6 +20,7 @@ install:
   - gcc --version
   - python --version
   - pip install nose2 nose-cov
+  - pip install coveralls
   - make
   # - conda install --yes -c dan_blanchard python-coveralls nose-cov
 script:
