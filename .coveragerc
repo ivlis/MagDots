@@ -6,3 +6,4 @@ source = model
 omit = tests/*
        test_*.*
        __init__.py
+       */__init__.py
