@@ -23,6 +23,6 @@ install:
   - make
   # - conda install --yes -c dan_blanchard python-coveralls nose-cov
 script:
-    - coverage run --source=lib -m nose2.__main__ -v
+    - coverage run -m nose2.__main__ -v
 after_success:
   - coveralls
