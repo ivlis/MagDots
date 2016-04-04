@@ -1,9 +1,14 @@
 language: python
 python:
-    - "3.3"
-    - "3.4"
+    # - "3.3"
+    # - "3.4"
     - "3.5"
+addons:
+  apt:
+    packages:
+    - python3-numpy
+    - python3-scipy
 before_install:
-    - pip install numpy scipy nose2
+    - pip install nose2
 script:
     - nose2
