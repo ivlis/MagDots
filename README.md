@@ -13,13 +13,20 @@ nanodots"](http://arxiv.org/abs/1511.08483).
 ## Installation
 
 ### Requirements
-* Python 3.4 or later
-* Cython and a C compiler
+* Python 3.3 or later
+* Cython and a C compiler (gcc)
+* Make
 * NumPy and SciPy
+* GNU GSL library from your distribution (headers and binary)
 * Matplotlib for plotting
 
-To compile the Cython code execute the Makefile. Compilation was tested on Linux-based systems only,
+To compile the Cython code execute the Makefile:
+`make`
+
+Compilation was tested on Linux-based systems only,
 however, should work on other systems with Cython and a C compiler installed. 
+
+To run tests type `make tests`
 
 Having the Cython code complied, one can run examples from the `examples` directory
 
