@@ -15,8 +15,9 @@ before_install:
   - export PATH=/home/travis/miniconda3/bin:$PATH
   - conda update --yes conda
 install:
-  - conda install --yes python=$TRAVIS_PYTHON_VERSION atlas numpy scipy
+  - conda install --yes python=$TRAVIS_PYTHON_VERSION atlas numpy scipy cython
   - pip install nose2
+  - make
   # - conda install --yes -c dan_blanchard python-coveralls nose-cov
 script:
     - nose2
