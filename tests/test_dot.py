@@ -56,7 +56,9 @@ class TestElements(unittest.TestCase):
         self.assertTrue(np.allclose(Nk, Nk_should_be))
     def test_double_dot(self):
         d = np.array([1.0,0.0,0.0])
-        dot = DoubleDot(**self.params, d = d)
+        params = self.params.copy()
+        params['d'] = d
+        dot = DoubleDot(**params)
         e = list(range(1,4*3+1))
         Nk = dot.elements_to_matrix(e)
         Nk_should_be = np.array(
