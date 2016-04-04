@@ -16,7 +16,7 @@ before_install:
   - conda update --yes conda
 install:
   - conda install --yes python=$TRAVIS_PYTHON_VERSION gcc atlas numpy scipy cython
-  - conda install -yes -c https://conda.anaconda.org/asmeurer gsl
+  - conda install --yes -c https://conda.anaconda.org/asmeurer gsl
   - gcc --version
   - python --version
   - pip install nose2
