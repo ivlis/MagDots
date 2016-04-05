@@ -4,14 +4,14 @@
     This file is part of MagDots.
 
     (C) Ivan Lisenkov
-    Oakland Univerity, 
+    Oakland Univerity,
     Michigan, USA
 
     2015
 
     MagDots: Magnetization dynamics of nanoelement arrays
 
-    How to cite. 
+    How to cite.
     If you are using this program or/and produce scientific publications based on it,
     we kindly ask you to cite it as:
 
@@ -59,12 +59,6 @@ from ..util_pyx.util import map_array, k_shift
 mu0 = const.codata.value('mag. constant')
 gamma = const.codata.value('electron gyromag. ratio')
 
-def make_toeplitz_from_blocks(B):
-    assert(len(B)%2 == 1)
-    t = int(len(B)/2 + 1)
-    T = np.vstack([np.hstack(B[i:i+t]) for i in range(t-1, -1, -1)])
-    return T
-
 class ArrayUnstable(Exception):
     pass
 
@@ -83,7 +77,7 @@ def magn_norm(m, J):
 class Wave:
     self_vectors = True
     check_stability = True
-    
+
     @staticmethod
     def __sort(w, v):
         w = -np.imag(w)
@@ -167,7 +161,7 @@ class BulkWave(Wave):
     @property
     def Bbias(self):
         return self._Bbias
-    
+
     @Bbias.setter
     def Bbias(self, Bbias):
         assert(Bbias.shape == self.mu.shape)
@@ -224,7 +218,7 @@ class BulkWave(Wave):
             raise RuntimeError("Equlibrium condition cannot be found")
 
         self.mu = sol.x[0:3*N]
-        
+
         B = make_block_diag([sol.x[3*N + n ]*np.identity(3) for n in range(N)])
 
         return mu0*dot.Ms*B
@@ -256,7 +250,7 @@ class EdgeWave(BulkWave):
         self._B_comp = B_comp
         self._B_comp_middle = B_comp_middle
         self._mu = self.__constr_magn_lattice(mu, self.N_MAX)
-    
+
     @staticmethod
     def __constr_magn_lattice(ma_la, N_MAX):
         unrolled = [mu for i,mu in zip(range(0, N_MAX+1), ma_la)]
@@ -302,21 +296,21 @@ class EdgeWave(BulkWave):
     #@profile
     def Fk(self, k):
         Eks = self._Ek(k)
-        Eks = make_toeplitz_from_blocks(Eks)
+        Eks = _make_toeplitz_from_blocks(Eks)
         return Eks
 
     def _Ek(self, k):
         dot = self._dot
         N_funcs = dot.get_elements()
 
-        E_comps = [self._Ek_component(k, func) for func in N_funcs] 
+        E_comps = [self._Ek_component(k, func) for func in N_funcs]
 
         K = dot.K
-        
+
         Eks = [dot.elements_to_matrix(Ek) for Ek in zip(*E_comps)]
 
         Eks[self.N_MAX] += K
-        
+
         return Eks
 
     def _Ek_component(self, k, n_func):
@@ -327,7 +321,7 @@ class EdgeWave(BulkWave):
         def func(l, t):
             K = k_shift(b1, b2, k, l, t)# (k/(2*np.pi) + l)*b1 + t*b2
             return n_func(K)
-        
+
         Ek33 = self._calculate_sum(func)
 
         Ek33 /= self._la.S0
@@ -371,14 +365,14 @@ class EdgeWave(BulkWave):
     #@profile
     def _calculate_fft(self, func, T, tick, N, NK):
         N_MAX = self.N_MAX
-        
+
         F = map_array(T, func)
         FFT = fft(F)*tick*2
 
         W = np.fft.fftfreq(N, d=tick)
-        FFT = np.exp(-1.0j*np.pi*W*tick*(N))*FFT 
+        FFT = np.exp(-1.0j*np.pi*W*tick*(N))*FFT
         FFT = np.fft.fftshift(FFT)
-        
+
         s_fft = FFT[N//2-2*N_MAX*N//NK:N//2+2*(N_MAX+1)*N//NK:2*N//NK]
 
         return s_fft
@@ -389,6 +383,9 @@ class EdgeWave(BulkWave):
 
         I = complex_quad(integrant_cos, -np.inf, np.inf, limit=1000, epsabs=1e-5)[0]
         return I
-        
 
-
+def _make_toeplitz_from_blocks(B):
+    assert(len(B)%2 == 1)
+    t = int(len(B)/2 + 1)
+    T = np.vstack([np.hstack(B[i:i+t]) for i in range(t-1, -1, -1)])
+    return T
