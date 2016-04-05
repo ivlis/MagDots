@@ -37,8 +37,6 @@
 '''
 
 
-#import matplotlib.pyplot as plt
-#import matplotlib.pyplot as plt
 import itertools
 import numpy as np
 import scipy.constants as const
@@ -47,7 +45,6 @@ import scipy.special as sf
 import scipy.optimize as OPT
 
 from functools import wraps
-from matplotlib import pyplot as plt
 from multiprocessing import Pool
 from numpy.fft import fft, fftshift
 
