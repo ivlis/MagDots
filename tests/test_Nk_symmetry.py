@@ -9,17 +9,14 @@ mu0 = const.codata.value('mag. constant')
 
 from nose2.tools import params
 
-from ..model.dot import Dot, DoubleDot
-
+from ..model.dot import Dot, DoubleDot, construct_Nk
 
 R = 1.0
-
 p = dict(R = R,
               h = 30.0*R,
               Ms = 1.0
               )
 cylindricalDot = Dot(**p)
-
 p = dict(R = R,
               h = 30.0*R,
               Ms = 1.0,
@@ -29,12 +26,13 @@ doubleDot = DoubleDot(**p)
 
 @params(cylindricalDot, doubleDot)
 def test_minus_k(dot):
-    k = np.array([0.1,0.2,0])
-    elements = dot.get_elements()
-    vals = [e(k) for e in elements]
-    Nk = dot.elements_to_matrix(vals)
-    vals = [e(-k) for e in elements]
-    Nminusk = dot.elements_to_matrix(vals)
-    Nkconj = np.conj(Nk).T
-    npt.assert_allclose(Nk, Nminusk.T, atol=1e-7)
-    npt.assert_allclose(Nk, Nkconj, atol=1e-7)
+    KX = np.linspace(-10,10, num=20)
+    KY = np.linspace(-10,10, num=20)
+    for kx in KX:
+        for ky in KY:
+            k = np.array([kx, ky, 0])
+            Nk = construct_Nk(dot, lambda e: e(k))
+            Nminusk = construct_Nk(dot, lambda e: e(-k))
+            Nkconj = np.conj(Nk).T
+            npt.assert_allclose(Nk, Nminusk.T, atol=1e-7)
+            npt.assert_allclose(Nk, Nkconj, atol=1e-7)

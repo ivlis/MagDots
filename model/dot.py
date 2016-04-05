@@ -47,8 +47,11 @@ import scipy.special as sf
 from ..util.util import set_limit_value, make_block_diag
 from ..util_pyx.util import mod2, norm2, dot2, real_exp, real_j1, real_close2zero, phase_shift
 
-#from ._dot import *
-
+def construct_Nk(dot, fn):
+    elements = dot.get_elements()
+    vals = [fn(e) for e in elements]
+    Nk = dot.elements_to_matrix(vals) + dot.K
+    return Nk
 
 class Dot:
     """Implement demag tensor calculation for single dot"""
