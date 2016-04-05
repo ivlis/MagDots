@@ -68,6 +68,9 @@ class Dot:
             self._na = na
             self._Ha = Ha
 
+    @property
+    def number_of_elements(self):
+        return 1
 
     def get_elements(self):
         return [self.N11, self.N22, self.N12, self.N33]
@@ -180,6 +183,10 @@ class DoubleDot(Dot):
             res = phase_shift(f, kd)
             return res
         return shifted
+
+    @property
+    def number_of_elements(self):
+        return 2
 
     def get_elements(self):
         """@todo: Docstring for get_elements.
