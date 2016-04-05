@@ -14,9 +14,6 @@ before_install:
   - ./miniconda.sh -b
   - export PATH=/home/travis/miniconda3/bin:$PATH
   - conda update --yes conda
-  # Fix multiprocess
-  - sudo rm -rf /dev/shm
-  - sudo ln -s /run/shm /dev/shm
 install:
   - conda install --yes python=$TRAVIS_PYTHON_VERSION gcc atlas numpy scipy cython
   # - conda install --yes -c https://conda.anaconda.org/asmeurer gsl

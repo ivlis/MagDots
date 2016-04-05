@@ -12,7 +12,7 @@ clean:
 	$(RM) util_pyx/util*.so
 
 test:
-	$(PYTHON)  -m nose2.__main__  -v
+	nose2 --plugin=nose2.plugins.mp
 
 test-coverage:
 	coverage run  -m nose2.__main__  -v
