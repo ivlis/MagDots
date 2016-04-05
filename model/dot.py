@@ -37,7 +37,7 @@
 '''
 
 
-
+from abc import ABCMeta, abstractmethod
 import functools
 import numpy as np
 import scipy.constants as const
@@ -47,13 +47,29 @@ import scipy.special as sf
 from ..util.util import set_limit_value, make_block_diag
 from ..util_pyx.util import mod2, norm2, dot2, real_exp, real_j1, real_close2zero, phase_shift
 
-def construct_Nk(dot, fn):
-    elements = dot.get_elements()
-    vals = [fn(e) for e in elements]
-    Nk = dot.elements_to_matrix(vals) + dot.K
-    return Nk
+class BaseDot(metaclass=ABCMeta):
+    '''A base class implemeting an interface for an element of a magnetic array'''
 
-class Dot:
+    def Nk(self, fn):
+        elements = self.get_elements()
+        vals = [fn(e) for e in elements]
+        Nk = self.elements_to_matrix(vals) + self.K
+        return Nk
+
+    @abstractmethod
+    def get_elements(self):
+        pass
+
+    @abstractmethod
+    def elements_to_matrix(self, vals):
+        pass
+
+    @property
+    @abstractmethod
+    def K(self):
+        pass
+
+class Dot(BaseDot):
     """Implement demag tensor calculation for single dot"""
     def __init__(self, R, h, Ms, anisotropy=None):
         self._R = R
@@ -72,8 +88,7 @@ class Dot:
     def get_elements(self):
         return [self.N11, self.N22, self.N12, self.N33]
 
-    @staticmethod
-    def elements_to_matrix(e):
+    def elements_to_matrix(self, e):
         Nk = np.zeros((3,3), dtype=complex)
         Nk[0][0] = e[0]
         Nk[1][1] = e[1]
@@ -193,8 +208,7 @@ class DoubleDot(Dot):
         elements.extend([self._shift(f, d) for f in single_dot])
         return elements
 
-    @classmethod
-    def elements_to_matrix(cls, e):
+    def elements_to_matrix(self, e):
         Nk = np.zeros((6,6), dtype=complex)
         Nk11 = super().elements_to_matrix(e[0:4])
         Nk12 = super().elements_to_matrix(e[4:8])
