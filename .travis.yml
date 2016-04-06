@@ -1,29 +1,52 @@
-language: python
-python:
-    - "3.3"
-    - "3.4"
-    - "3.5"
+os:
+    - linux
+    - osx
+language: generic
+env:
+    - PYTHON_VERSION="3.3"
+    - PYTHON_VERSION="3.4"
+    - PYTHON_VERSION="3.5"
+matrix:
+  allow_failures:
+    - os: osx
+  exclude:
+    - os: osx
+      env: PYTHON_VERSION="3.3"
+    - os: osx
+      env: PYTHON_VERSION="3.4"
+
 addons:
   apt:
     packages:
     - libgsl0-dev
     - gsl-bin
 before_install:
-  - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+  - >
+    if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+      wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+    else
+      wget https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O miniconda.sh;
+    fi
   - chmod +x miniconda.sh
   - ./miniconda.sh -b
-  - export PATH=/home/travis/miniconda3/bin:$PATH
+  - pwd
+  - export PATH=$HOME/miniconda3/bin:$PATH
   - conda update --yes conda
+  - conda install -y -c https://conda.anaconda.org/asmeurer gsl
 install:
-  - conda install --yes python=$TRAVIS_PYTHON_VERSION gcc atlas numpy scipy cython
-  # - conda install --yes -c https://conda.anaconda.org/asmeurer gsl
+  - conda install --yes python=$PYTHON_VERSION gcc numpy scipy cython
   - gcc --version
   - python --version
   - pip install nose2 nose-cov
   - pip install coveralls
-  - make
+  - C_INCLUDE_PATH=$HOME/miniconda3/envs/include make
   # - conda install --yes -c dan_blanchard python-coveralls nose-cov
 script:
-    - make test-coverage
+    - >
+        if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+            make test-coverage
+        else
+            DYLD_LIBRARY_PATH=$HOME/miniconda3/lib make test-coverage
+        fi
 after_success:
   - coveralls
