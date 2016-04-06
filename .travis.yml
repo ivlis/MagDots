@@ -34,14 +34,12 @@ before_install:
   - conda update --yes conda
   - conda install -y -c https://conda.anaconda.org/asmeurer gsl
 install:
-  - export C_INCLUDE_PATH=$HOME/miniconda3/envs/include
   - conda install --yes python=$PYTHON_VERSION gcc numpy scipy cython
-  # - conda install --yes -c https://conda.anaconda.org/asmeurer gsl
   - gcc --version
   - python --version
   - pip install nose2 nose-cov
   - pip install coveralls
-  - make
+  - C_INCLUDE_PATH=$HOME/miniconda3/envs/include make
   # - conda install --yes -c dan_blanchard python-coveralls nose-cov
 script:
     - make test-coverage
