@@ -9,6 +9,11 @@ env:
 matrix:
   allow_failures:
     - os: osx
+  exclude:
+    - os: osx
+      env: PYTHON_VERSION="3.3"
+    - os: osx
+      env: PYTHON_VERSION="3.4"
 
 addons:
   apt:
