@@ -12,8 +12,13 @@ gamma = const.codata.value('electron gyromag. ratio')
 
 from ..model.dot import Dot, DoubleDot
 from ..model.lattice import Lattice, ContourIterator
-from ..model.dotarray import BulkWave
+from ..model.dotarray import BulkWave, magn_norm
 from ..util.util import calculate_bulk, BulkData
+
+def _calc_norms(V, J):
+    a, b_ = J.shape
+    norms = [magn_norm(m, J) for m in np.reshape(np.swapaxes(V,1,2), (-1,a))]
+    return norms
 
 class TestBulkCAFM(unittest.TestCase):
     def test_bulk_cafm(self):
@@ -56,7 +61,10 @@ class TestBulkCAFM(unittest.TestCase):
 
         result_should_be = BulkData.load_from_file("test/fixtures/bulk_CAFM.npz")
 
-        npt.assert_allclose(result.W, result_should_be.W, atol=1e-3)
+        npt.assert_allclose(result.W/(gamma*mu0*Ms), result_should_be.W/(gamma*mu0*Ms), atol=1e-3)
         npt.assert_allclose(result.J, result_should_be.J, atol=1e-3)
-        npt.assert_allclose(result.V, result_should_be.V, atol=1e-3)
         npt.assert_allclose(result.B, result_should_be.B, atol=1e-3)
+
+        norms = _calc_norms(result.V, result.J)
+        norms_should_be = _calc_norms(result_should_be.V, result_should_be.J)
+        npt.assert_allclose(norms, norms_should_be, atol=1e-3)
