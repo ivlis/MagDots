@@ -25,7 +25,12 @@ before_install:
   - chmod +x miniconda.sh
   - ./miniconda.sh -b
   - pwd
-  - export PATH=/home/travis/miniconda3/bin:$PATH
+  - >
+    if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+      export PATH=/home/travis/miniconda3/bin:$PATH
+    else
+      export PATH=/Users/travis/miniconda3/bin:$PATH
+    fi
   - conda update --yes conda
 install:
   - conda install --yes python=$PYTHON_VERSION gcc atlas numpy scipy cython
