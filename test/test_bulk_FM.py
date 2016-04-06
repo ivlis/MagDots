@@ -48,7 +48,7 @@ class TestBulkFM(unittest.TestCase):
 
         result_should_be = BulkData.load_from_file("test/fixtures/bulk_FM.npz")
 
-        npt.assert_array_almost_equal_nulp(result.W, result_should_be.W)
-        npt.assert_array_almost_equal_nulp(result.J, result_should_be.J)
-        npt.assert_array_almost_equal_nulp(result.V, result_should_be.V)
-        npt.assert_array_almost_equal_nulp(result.B, result_should_be.B)
+        npt.assert_allclose(result.W, result_should_be.W)
+        npt.assert_allclose(result.J, result_should_be.J)
+        npt.assert_allclose(result.V, result_should_be.V)
+        npt.assert_allclose(result.B, result_should_be.B)
