@@ -56,7 +56,7 @@ class TestBulkCAFM(unittest.TestCase):
 
         result_should_be = BulkData.load_from_file("test/fixtures/bulk_CAFM.npz")
 
-        npt.assert_allclose(result.W, result_should_be.W)
-        npt.assert_allclose(result.J, result_should_be.J)
-        npt.assert_allclose(result.V, result_should_be.V)
-        npt.assert_allclose(result.B, result_should_be.B)
+        npt.assert_allclose(result.W, result_should_be.W, atol=1e-3)
+        npt.assert_allclose(result.J, result_should_be.J, atol=1e-3)
+        npt.assert_allclose(result.V, result_should_be.V, atol=1e-3)
+        npt.assert_allclose(result.B, result_should_be.B, atol=1e-3)
