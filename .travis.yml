@@ -42,6 +42,11 @@ install:
   - C_INCLUDE_PATH=$HOME/miniconda3/envs/include make
   # - conda install --yes -c dan_blanchard python-coveralls nose-cov
 script:
-    - make test-coverage
+    - >
+        if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+            make test-coverage
+        else
+            DYLD_LIBRARY_PATH=$HOME/miniconda3/lib make test-coverage
+        fi
 after_success:
   - coveralls
