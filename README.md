@@ -23,7 +23,7 @@ nanodots"](http://arxiv.org/abs/1511.08483).
 To compile the Cython code execute the Makefile:
 `make`
 
-Compilation was tested on Linux-based systems only,
+Compilation was tested on Linux-based and OS X systems only,
 however, should work on other systems with Cython and a C compiler installed. 
 
 To run tests type `make tests`
