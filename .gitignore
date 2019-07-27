@@ -4,4 +4,4 @@ build/
 util*.so
 util*.pyd
 util.c
-
+.coverage

@@ -4,14 +4,14 @@
     This file is part of MagDots.
 
     (C) Ivan Lisenkov
-    Oakland Univerity, 
+    Oakland Univerity,
     Michigan, USA
 
     2015
 
     MagDots: Magnetization dynamics of nanoelement arrays
 
-    How to cite. 
+    How to cite.
     If you are using this program or/and produce scientific publications based on it,
     we kindly ask you to cite it as:
 
@@ -99,7 +99,7 @@ def rotate(v, a):
     M = np.array([[ np.cos(a), -np.sin(a), 0],
                   [ np.sin(a),  np.cos(a), 0],
                   [         0,          0, 1]])
-    
+
     return M.dot(v)
 
 
@@ -167,7 +167,7 @@ class BulkData:
 
         np.savez(filename, K = self.K, K_mod = self.K_mod, W = self.W, points = self.points, V =
                 self.V, J = self.J, B = self.B)
-        
+
 
 class EdgeData:
     def __init__(self, W,  V, K, J, points, B):
@@ -200,14 +200,21 @@ class EdgeData:
 
 
 
-def calculate_bulk(bulk, K, K_mod, points):
+def calculate_bulk(bulk, K, K_mod, points, parallel=True):
 
-    
+
     #Perform calculations
-    W, V  = parallel_calculation(bulk, K)
+    if parallel:
+        W, V  = parallel_calculation(bulk, K)
+    else:
+        W_V = list(map(bulk.omega, K))
+        W, V = zip(*W_V)
+        W = np.array(W)
+        V = np.array(V)
+
 
     K = np.array(K)
-    
+
     J = bulk.J
     B = bulk.B
 
@@ -216,7 +223,7 @@ def calculate_bulk(bulk, K, K_mod, points):
 
 def calculate_edge(edge, K, points):
 
-    
+
     #Perform calculations
     W, V  = parallel_calculation(edge, K)
 
@@ -224,5 +231,3 @@ def calculate_edge(edge, K, points):
     B = edge.B
 
     return  EdgeData(W=W, V=V, K=K, J = J, points = points, B = B)
-
-

@@ -4,14 +4,14 @@
     This file is part of MagDots.
 
     (C) Ivan Lisenkov
-    Oakland Univerity, 
+    Oakland Univerity,
     Michigan, USA
 
     2015
 
     MagDots: Magnetization dynamics of nanoelement arrays
 
-    How to cite. 
+    How to cite.
     If you are using this program or/and produce scientific publications based on it,
     we kindly ask you to cite it as:
 
@@ -47,8 +47,11 @@ import scipy.special as sf
 from ..util.util import set_limit_value, make_block_diag
 from ..util_pyx.util import mod2, norm2, dot2, real_exp, real_j1, real_close2zero, phase_shift
 
-#from ._dot import *
-
+def construct_Nk(dot, fn):
+    elements = dot.get_elements()
+    vals = [fn(e) for e in elements]
+    Nk = dot.elements_to_matrix(vals) + dot.K
+    return Nk
 
 class Dot:
     """Implement demag tensor calculation for single dot"""
@@ -65,6 +68,9 @@ class Dot:
             self._na = na
             self._Ha = Ha
 
+    @property
+    def number_of_elements(self):
+        return 1
 
     def get_elements(self):
         return [self.N11, self.N22, self.N12, self.N33]
@@ -117,7 +123,7 @@ class Dot:
             return self.S
         else:
             return self.S * 2.0*real_j1(kr)/kr
- 
+
 
     def _nij_helper(fn):
         @functools.wraps(fn)
@@ -153,7 +159,7 @@ class Dot:
     @_nij_helper
     def N33(self, k, kr, fkh):
         return 1.0 - fkh
-        
+
 
 class DoubleDot(Dot):
     def __init__(self, R, h, Ms, d, anisotropies=None):
@@ -178,6 +184,10 @@ class DoubleDot(Dot):
             return res
         return shifted
 
+    @property
+    def number_of_elements(self):
+        return 2
+
     def get_elements(self):
         """@todo: Docstring for get_elements.
         :returns: @todo
@@ -186,10 +196,10 @@ class DoubleDot(Dot):
         single_dot = super().get_elements()
         d = self._d
         elements = single_dot
-        elements.extend([self._shift(f, d) for f in single_dot])
         elements.extend([self._shift(f, -d) for f in single_dot])
+        elements.extend([self._shift(f, d) for f in single_dot])
         return elements
-    
+
     @classmethod
     def elements_to_matrix(cls, e):
         Nk = np.zeros((6,6), dtype=complex)
@@ -198,8 +208,8 @@ class DoubleDot(Dot):
         Nk21 = super().elements_to_matrix(e[8:12])
         Nk[0:3,0:3] = Nk11
         Nk[3:6,3:6] = Nk11
-        Nk[0:3,3:6] = Nk21
-        Nk[3:6,0:3] = Nk12
+        Nk[0:3,3:6] = Nk12
+        Nk[3:6,0:3] = Nk21
         return Nk
 
     @property
@@ -222,4 +232,3 @@ class InfiniteDot(Dot):
     @set_limit_value(1,0.0,0.0)
     def _fkh(self, kmod):
         return 1.0
-

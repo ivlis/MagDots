@@ -1,0 +1,9 @@
+[run]
+branch = True
+source = model
+         util
+         util_pyx
+omit = tests/*
+       test_*.*
+       __init__.py
+       */__init__.py
